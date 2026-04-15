@@ -9,9 +9,14 @@ import requests
 from models import get_db
 from typing import List
 
-models.Base.metadata.create_all(bind=engine)
-
 app = FastAPI()
+
+@app.on_event("startup")
+def startup():
+    try:
+        models.Base.metadata.create_all(bind=engine)
+    except Exception as e:
+        print(f"Warning: Could not create tables on startup: {e}")
 
 # CORS setup
 app.add_middleware(

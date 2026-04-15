@@ -1,14 +1,10 @@
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from dotenv import load_dotenv
-import os
-import models
-load_dotenv()
 
-SQLALCHEMY_DATABASE_URL = f"postgresql://ramprk97:{os.getenv("db_password")}@dpg-cvtsah1r0fns73dvt7rg-a.frankfurt-postgres.render.com/mutual_fund_kxds"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./mutualfund.db"
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
@@ -29,5 +25,4 @@ def create_tables():
         else:
             print(f"Table already exists: {table_name}")
 
-# Call this function during application startup or initialization
-create_tables()
+# Call create_tables() during application startup, not at import time
